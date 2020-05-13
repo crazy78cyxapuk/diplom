@@ -25,26 +25,24 @@ public class Bullet : MonoBehaviour
 
         if (timer > 5)
         {
-            Destroy(gameObject);
+            DestroyBullet();
         }
 
         transform.up = rb.velocity;
     }
 
-    private void FixedUpdate()
+    private void DestroyBullet()
     {
-        //Vector3 cross = Vector3.Cross(transform.forward, transform.right);
-        //rb.AddTorque(VelocityValue * rb.velocity.magnitude);
-        //rb.AddTorque(-rb.angularVelocity + (float)Vector3.Project(rb.angularVelocity, transform.forward));
+        Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        Instantiate(particleSystem, pos, Quaternion.identity);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Planet")// || collision.gameObject.tag == "Player") ;
         {
-            Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            Instantiate(particleSystem, pos, Quaternion.identity);
-            Destroy(gameObject);
+            DestroyBullet();
         }
     }
 
@@ -52,9 +50,7 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            Instantiate(particleSystem, pos, Quaternion.identity);
-            Destroy(gameObject);
+            DestroyBullet();
         }
     }
 }

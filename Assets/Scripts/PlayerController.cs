@@ -6,25 +6,44 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public Transform aroundObj;
-    public float rotSpeed = 0f;
+    //танк
+    [SerializeField] private Transform aroundObj;
+    [SerializeField] private float rotSpeed;
     private float speed;
     private bool goMove;
     private bool flipRight;
-    //public Transform rig;
-    public GameObject bullet;
-    public GameObject startStvolRight;
-    private bool logicVelocity = true;
+    [SerializeField] private GameObject bullet;
+    [SerializeField] private GameObject startStvolRight;
+    private bool logicVelocity;
+
+    //дуло танка
+    [SerializeField] private GameObject barrel;
+    [SerializeField] private Transform aroundBarrel;
+    private bool moveBarrel;
+    private float speedBarrel;
+
+    //ракета
+    private int speedStrength;
+    private bool createBullet;
 
     private void Start()
     {
         goMove = false;
         flipRight = true;
+        logicVelocity = true;
+        createBullet = false;
+
+        speedBarrel = 0.2f;
+        moveBarrel = false;
+
+        speedStrength = 0;
     }
 
 
     void Update()
     {
+
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             MoveLeft();
@@ -39,6 +58,15 @@ public class PlayerController : MonoBehaviour
             StopMove();
         }
 
+        if (Input.GetKey(KeyCode.Space))
+        {
+            ControlSpeedBullet();
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            Fire();
+        }
+#endif
 
 
         if (goMove)
@@ -46,10 +74,28 @@ public class PlayerController : MonoBehaviour
             transform.RotateAround(aroundObj.position, new Vector3(0, 0, -1), speed);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (moveBarrel)
         {
-            fire();
+            if (speedBarrel < 0 && barrel.transform.rotation.eulerAngles.z > -15)
+            {
+                barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), -1f);//speedBarrel);
+                
+                
+                Debug.Log(TranslateEulerToRotate(barrel.transform.rotation.z) + "rotation");
+
+            }
+
+            //if (speedBarrel > 0 && barrel.transform.localEulerAngles.z > 15)
+            //{
+            //    barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), speedBarrel);
+            //}
         }
+
+        if (createBullet)
+        {
+            ControlSpeedBullet();
+        }
+        
     }
 
     private void FixedUpdate()
@@ -59,20 +105,41 @@ public class PlayerController : MonoBehaviour
         transform.rotation = rotation * transform.rotation;
     }
 
-    public void fire()
+    public void Fire()
     {
         Vector3 spawnPoint;
-        Quaternion quaternionStvol;
-        int speedBullet = 500;
+        int speedBullet = 500 + speedStrength;
         spawnPoint = startStvolRight.transform.position; //получаем координаты откуда будем стрелять
-        GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
+        GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.identity);//Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
         Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
 
         
         pula.transform.right = !logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
-        speedBullet = !logicVelocity ? 500 : -500;
-        rbPula.AddForce(transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
+        speedBullet = !logicVelocity ? speedBullet : -speedBullet;
+
+        rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
+
+        speedStrength = 0;
+        createBullet = false;
     }
+
+    public void ControlSpeedBullet()
+    {
+        if (speedStrength < 300)
+        {
+            speedStrength += 10;
+        }
+        else
+        {
+            Fire();
+        }
+    }
+
+    public void CreateBullet()
+    {
+        createBullet = true;
+    }
+
 
     public void StopMove()
     {
@@ -110,5 +177,34 @@ public class PlayerController : MonoBehaviour
         }
 
         speed = -rotSpeed;
+    }
+    
+    public void MoveBarrelUp()
+    {
+        moveBarrel = true;
+
+        speedBarrel = - 0.2f;
+    }
+
+    public void MoveBarrelDown()
+    {
+        moveBarrel = true;
+
+        speedBarrel = 0.2f;
+    }
+
+    public void MoveBarrelStop()
+    {
+        moveBarrel = false;
+    }
+
+    public float TranslateEulerToRotate(float angle)
+    {
+        if (angle >= 0)
+            return angle;
+
+        angle = -angle % 360;
+
+        return 360 - angle;
     }
 }
