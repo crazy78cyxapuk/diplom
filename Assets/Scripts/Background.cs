@@ -13,9 +13,9 @@ public class Background : MonoBehaviour
         transform.position -= new Vector3(.05f, 0, 0);
 
 
-        if (create == false && transform.position.x < 25)
+        if (create == false && transform.position.x < -4)
         {
-            Vector3 position = new Vector3(84, 0, 106.5f);
+            Vector3 position = new Vector3(96, 0, 106.5f);
             Instantiate(background, position, Quaternion.identity);
             create = true;
         }

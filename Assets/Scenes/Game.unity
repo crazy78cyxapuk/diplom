@@ -1613,6 +1613,11 @@ PrefabInstance:
       propertyPath: hpBotTankTxt
       value: 
       objectReference: {fileID: 418302200}
+    - target: {fileID: 7149408376047007790, guid: 9c9e0102ec4858f4db022d0c23c54863,
+        type: 3}
+      propertyPath: fireBtn
+      value: 
+      objectReference: {fileID: 920937618}
     - target: {fileID: 8975812903672724481, guid: 9c9e0102ec4858f4db022d0c23c54863,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -1849,6 +1854,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpaceBackground
+      objectReference: {fileID: 0}
+    - target: {fileID: 5472783952411694910, guid: ae09c8692ef805f4184a8ef924375d72,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae09c8692ef805f4184a8ef924375d72, type: 3}

@@ -16,6 +16,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject startStvolRight;
     private bool logicVelocity;
 
+    [SerializeField] private GameObject strengthBulletProgressBar;
+    private Color color;
+
+    public float recharge; //таймер для перезарядки
+
+
+    bool strengthOver = true;
+
     //дуло танка
     [SerializeField] private GameObject barrel;
     [SerializeField] private Transform aroundBarrel;
@@ -23,8 +31,11 @@ public class PlayerController : MonoBehaviour
     private float speedBarrel;
 
     //ракета
-    private int speedStrength;
+    private float speedStrength;
     private bool createBullet;
+
+    //UI
+    [SerializeField] private Button fireBtn;
 
     private void Start()
     {
@@ -37,6 +48,11 @@ public class PlayerController : MonoBehaviour
         moveBarrel = false;
 
         speedStrength = 0;
+
+        recharge = 3f;
+
+        color = strengthBulletProgressBar.GetComponent<SpriteRenderer>().color;
+        //strengthBulletProgressBarColor = strengthBulletProgressBar.GetComponent<SpriteRenderer>().material.color;
     }
 
 
@@ -79,11 +95,10 @@ public class PlayerController : MonoBehaviour
             if (speedBarrel < 0 && barrel.transform.rotation.eulerAngles.z > -15)
             {
                 barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), -1f);//speedBarrel);
-                
-                
-                Debug.Log(TranslateEulerToRotate(barrel.transform.rotation.z) + "rotation");
 
             }
+
+            
 
             //if (speedBarrel > 0 && barrel.transform.localEulerAngles.z > 15)
             //{
@@ -95,7 +110,23 @@ public class PlayerController : MonoBehaviour
         {
             ControlSpeedBullet();
         }
-        
+
+        if (recharge <= 3f)
+        {
+            recharge += Time.deltaTime;
+            if (fireBtn.IsInteractable() == true)
+            {
+                fireBtn.interactable = false;
+            }
+        }
+        else
+        {
+            if (fireBtn.IsInteractable() == false)
+            {
+                fireBtn.interactable = true;
+            }
+        }
+
     }
 
     private void FixedUpdate()
@@ -107,39 +138,67 @@ public class PlayerController : MonoBehaviour
 
     public void Fire()
     {
-        Vector3 spawnPoint;
-        int speedBullet = 500 + speedStrength;
-        spawnPoint = startStvolRight.transform.position; //получаем координаты откуда будем стрелять
-        GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.identity);//Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
-        Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
+        if (recharge >= 3f)
+        {
+            Vector3 spawnPoint;
+            int speedBullet = 500 + (int)speedStrength;
+            spawnPoint = startStvolRight.transform.position; //получаем координаты откуда будем стрелять
+            GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.identity);//Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
+            Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
 
-        
-        pula.transform.right = !logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
-        speedBullet = !logicVelocity ? speedBullet : -speedBullet;
 
-        rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
+            //pula.transform.right = logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
+            speedBullet = logicVelocity ? speedBullet : -speedBullet;
 
-        speedStrength = 0;
-        createBullet = false;
+            rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
+
+            speedStrength = 0;
+            createBullet = false;
+
+            recharge = 0;
+
+            strengthBulletProgressBar.SetActive(false);
+            strengthBulletProgressBar.GetComponent<SpriteRenderer>().color = color;
+        }
     }
 
     public void ControlSpeedBullet()
     {
-        if (speedStrength < 300)
+
+        if (strengthOver)
         {
-            speedStrength += 10;
+            if (speedStrength < 300)
+            {
+                speedStrength += 3;
+                strengthBulletProgressBar.GetComponent<SpriteRenderer>().color = Color.Lerp(Color.green, Color.red, speedStrength/300);
+            }
+            else
+            {
+                strengthOver = false;
+            }
         }
         else
         {
-            Fire();
+            if (speedStrength > 0)
+            {
+                speedStrength -= 3;
+                strengthBulletProgressBar.GetComponent<SpriteRenderer>().color = Color.Lerp(Color.red, Color.green, (1-speedStrength/300));
+            }
+            else
+            {
+                strengthOver = true;
+            }
         }
     }
 
     public void CreateBullet()
     {
-        createBullet = true;
+        if (recharge >= 3f)
+        {
+            strengthBulletProgressBar.SetActive(true);
+            createBullet = true;
+        }
     }
-
 
     public void StopMove()
     {
@@ -159,7 +218,6 @@ public class PlayerController : MonoBehaviour
             transform.localScale = scaler;
         }
 
-        gameObject.transform.GetComponent<SpriteRenderer>().flipX = false;
         speed = rotSpeed;
     }
 
