@@ -92,18 +92,10 @@ public class PlayerController : MonoBehaviour
 
         if (moveBarrel)
         {
-            if (speedBarrel < 0 && barrel.transform.rotation.eulerAngles.z > -15)
+            if (TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) >= -15 && TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) <= 15)
             {
-                barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), -1f);//speedBarrel);
-
+                barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), speedBarrel);
             }
-
-            
-
-            //if (speedBarrel > 0 && barrel.transform.localEulerAngles.z > 15)
-            //{
-            //    barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), speedBarrel);
-            //}
         }
 
         if (createBullet)
@@ -147,8 +139,8 @@ public class PlayerController : MonoBehaviour
             Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
 
 
-            //pula.transform.right = logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
-            speedBullet = logicVelocity ? speedBullet : -speedBullet;
+            pula.transform.right = logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
+            //speedBullet = logicVelocity ? speedBullet : -speedBullet;
 
             rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
 
@@ -239,16 +231,25 @@ public class PlayerController : MonoBehaviour
     
     public void MoveBarrelUp()
     {
-        moveBarrel = true;
+        if (TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) > 15)
+        {
+            barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), logicVelocity ? -0.2f : 0.2f);
+        }
 
-        speedBarrel = - 0.2f;
+
+        moveBarrel = true;
+        speedBarrel = logicVelocity ? -0.2f : 0.2f;
     }
 
     public void MoveBarrelDown()
     {
-        moveBarrel = true;
+        if (TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) < -15)
+        {
+            barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), logicVelocity ? 0.2f : -0.2f);
+        }
 
-        speedBarrel = 0.2f;
+        moveBarrel = true;
+        speedBarrel = logicVelocity ? 0.2f : -0.2f;
     }
 
     public void MoveBarrelStop()
@@ -256,13 +257,18 @@ public class PlayerController : MonoBehaviour
         moveBarrel = false;
     }
 
-    public float TranslateEulerToRotate(float angle)
+    public float TranslateEulerToRotate(float x)
     {
-        if (angle >= 0)
-            return angle;
+        if (x >= -90 && x <= 90)
+            return x;
 
-        angle = -angle % 360;
-
-        return 360 - angle;
+        x = x % 180;
+        
+        if (x > 0)
+            x -= 180;
+        else
+            x += 180;
+        
+        return x;
     }
 }
