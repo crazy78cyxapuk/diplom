@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
@@ -37,6 +38,9 @@ public class PlayerController : MonoBehaviour
     //UI
     [SerializeField] private Button fireBtn;
 
+    //Photon
+    private PhotonView photonView;
+
     private void Start()
     {
         goMove = false;
@@ -58,6 +62,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (photonView.IsMine) return;
 
 #if UNITY_EDITOR
         if (Input.GetKey(KeyCode.LeftArrow))
