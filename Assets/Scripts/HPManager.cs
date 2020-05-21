@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class HPManager : MonoBehaviour
+public class HPManager : MonoBehaviourPunCallbacks
 {
     private int hpBotTank;
     private const float HP_TANK = 250;
-    [SerializeField] private Text statusTxt;
 
-    [SerializeField] private Image hpRepeat, hpStatus;
+    private Image hpRepeat, hpStatus;
+
+    private PhotonView pv;
 
     private void Start()
     {
         hpBotTank = 250;
+
+        pv = GetComponent<PhotonView>();
+
+        InitHPObjects();
+
+        StartCoroutine(Deleted());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -27,26 +35,46 @@ public class HPManager : MonoBehaviour
 
             if (hpBotTank < 1)
             {
-                StartCoroutine(ReloadGame());
+                PhotonNetwork.LoadLevel("Menu");
             }
         }
     }
 
-    IEnumerator ReloadGame()
+    private void InitHPObjects()
     {
-        statusTxt.text = "Reload Game 3...";
-        yield return new WaitForSeconds(1);
-        statusTxt.text = "Reload Game 2...";
-        yield return new WaitForSeconds(1);
-        statusTxt.text = "Reload Game 1...";
-        yield return new WaitForSeconds(1);
-        SceneManager.LoadScene(0);
+        GameObject obj;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            obj = GameObject.FindGameObjectWithTag("MasterHP");
+
+        }
+        else
+        {
+            obj = GameObject.FindGameObjectWithTag("NoMasterHP");
+        }
+
+        hpRepeat = obj.transform.GetChild(0).GetComponent<Image>();
+        hpStatus = obj.transform.GetChild(1).GetComponent<Image>();
+    }
+
+    IEnumerator Deleted()
+    {
+        if (pv.IsMine)
+        {
+            StartCoroutine(TakeAwayHP(15));
+            yield return new WaitForSeconds(3);
+            StartCoroutine(Deleted());
+        }
     }
 
     IEnumerator TakeAwayHP(int t) //отнимаем здоровье
     {
-        hpStatus.fillAmount -= t / HP_TANK;
-        yield return new WaitForSeconds(1);
-        hpRepeat.fillAmount = hpStatus.fillAmount;
+        if (pv.IsMine)
+        {
+            hpStatus.fillAmount -= t / HP_TANK;
+            yield return new WaitForSeconds(1);
+            hpRepeat.fillAmount = hpStatus.fillAmount;
+        }
     }
 }

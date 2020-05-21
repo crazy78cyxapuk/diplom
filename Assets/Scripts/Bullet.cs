@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class Bullet : MonoBehaviour
 {
     private float timer = 0;
     private Rigidbody2D rb;
 
-    private Sprite bulletImg;
-
-    [SerializeField] private GameObject particleSystem;
-
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        bulletImg = GetComponent<Sprite>();
     }
 
     void Update()
@@ -33,9 +29,14 @@ public class Bullet : MonoBehaviour
 
     private void DestroyBullet()
     {
-        Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        Instantiate(particleSystem, pos, Quaternion.identity);
-        Destroy(gameObject);
+        PhotonView pv = gameObject.GetComponent<PhotonView>();
+        if (pv.IsMine)
+        {
+            Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            PhotonNetwork.Instantiate("BoomPS", pos, Quaternion.identity);
+            
+            PhotonNetwork.Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -48,7 +49,7 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
             DestroyBullet();
         }

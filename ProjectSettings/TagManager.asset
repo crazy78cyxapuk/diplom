@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Planet
   - Bullet
+  - FireBtn
+  - Master
+  - NoMaster
+  - MasterHP
+  - NoMasterHP
   layers:
   - Default
   - TransparentFX

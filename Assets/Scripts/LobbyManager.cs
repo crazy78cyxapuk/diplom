@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] Button[] btn;
+
     // Кинуть скрипт до сцены с игрой, то есть на меню
     void Start()
     {
@@ -19,6 +22,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         //base.OnConnectedToMaster();
         Debug.Log("connect");
+
+        for(int i=0; i<btn.Length; i++)
+        {
+            btn[i].interactable = true;
+        }
     }
 
     public void CreateRoom()

@@ -8,12 +8,12 @@ using Photon.Pun;
 public class PlayerController : MonoBehaviour
 {
     //танк
-    [SerializeField] private Transform aroundObj;
+    private Transform aroundObj;
     [SerializeField] private float rotSpeed;
     private float speed;
     private bool goMove;
     private bool flipRight;
-    [SerializeField] private GameObject bullet;
+    //[SerializeField] private GameObject bullet;
     [SerializeField] private GameObject startStvolRight;
     private bool logicVelocity;
 
@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
 
     bool strengthOver = true;
+    bool rotatPlayer = false;
 
     //дуло танка
     [SerializeField] private GameObject barrel;
@@ -41,11 +42,14 @@ public class PlayerController : MonoBehaviour
     //Photon
     private PhotonView photonView;
 
+
     private void Start()
     {
+        photonView = GetComponent<PhotonView>();
+
         goMove = false;
-        flipRight = true;
-        logicVelocity = true;
+        flipRight = false;
+        logicVelocity = false;
         createBullet = false;
 
         speedBarrel = 0.2f;
@@ -56,82 +60,96 @@ public class PlayerController : MonoBehaviour
         recharge = 3f;
 
         color = strengthBulletProgressBar.GetComponent<SpriteRenderer>().color;
-        //strengthBulletProgressBarColor = strengthBulletProgressBar.GetComponent<SpriteRenderer>().material.color;
+
+        GameObject obj = GameObject.FindGameObjectWithTag("FireBtn");
+        fireBtn = obj.GetComponent<Button>();
+        Debug.Log(fireBtn.name + "!!!!!!!!!!!");
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            GameObject around = GameObject.Find("orangePlanet");
+            aroundObj = around.transform;
+        }
+        else
+        {
+            GameObject around = GameObject.Find("bluePlanet");
+            aroundObj = around.transform;
+        }
     }
 
 
     void Update()
     {
-        if (photonView.IsMine) return;
+        if (photonView.IsMine)
+        {
 
 #if UNITY_EDITOR
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            MoveLeft();
-        }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                MoveLeft();
+            }
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            MoveRight();
-        }
-        if(Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            StopMove();
-        }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                MoveRight();
+            }
+            if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                StopMove();
+            }
 
-        if (Input.GetKey(KeyCode.Space))
-        {
-            ControlSpeedBullet();
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Fire();
-        }
+            if (Input.GetKey(KeyCode.Space))
+            {
+                ControlSpeedBullet();
+            }
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                Fire();
+            }
 #endif
 
 
-        if (goMove)
-        {
-            transform.RotateAround(aroundObj.position, new Vector3(0, 0, -1), speed);
-        }
-
-        if (moveBarrel)
-        {
-            if (TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) >= -15 && TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) <= 15)
+            if (goMove)
             {
-                barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), speedBarrel);
+                transform.RotateAround(aroundObj.position, new Vector3(0, 0, -1), speed);
+            }
+
+            if (moveBarrel)
+            {
+                if (TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) >= -15 && TranslateEulerToRotate(barrel.transform.localRotation.eulerAngles.z) <= 15)
+                {
+                    barrel.transform.RotateAround(aroundBarrel.position, new Vector3(0, 0, -1), speedBarrel);
+                }
+            }
+
+            if (createBullet)
+            {
+                ControlSpeedBullet();
+            }
+
+            if (recharge <= 3f)
+            {
+                recharge += Time.deltaTime;
+                if (fireBtn.IsInteractable() == true)
+                {
+                    fireBtn.interactable = false;
+                }
+            }
+            else
+            {
+                if (fireBtn.IsInteractable() == false)
+                {
+                    fireBtn.interactable = true;
+                }
             }
         }
-
-        if (createBullet)
-        {
-            ControlSpeedBullet();
-        }
-
-        if (recharge <= 3f)
-        {
-            recharge += Time.deltaTime;
-            if (fireBtn.IsInteractable() == true)
-            {
-                fireBtn.interactable = false;
-            }
-        }
-        else
-        {
-            if (fireBtn.IsInteractable() == false)
-            {
-                fireBtn.interactable = true;
-            }
-        }
-
     }
 
-    private void FixedUpdate()
-    {
-        //поворачиваем игрока всегда в сторону планеты, на которой он стоит
-        Quaternion rotation = Quaternion.FromToRotation(-transform.up, aroundObj.position - transform.position);
-        transform.rotation = rotation * transform.rotation;
-    }
+    //private void FixedUpdate()
+    //{
+    //    Quaternion rotation = Quaternion.FromToRotation(-transform.up, aroundObj.position - transform.position);
+    //    transform.rotation = rotation * transform.rotation;
+    //}
 
     public void Fire()
     {
@@ -140,11 +158,13 @@ public class PlayerController : MonoBehaviour
             Vector3 spawnPoint;
             int speedBullet = 500 + (int)speedStrength;
             spawnPoint = startStvolRight.transform.position; //получаем координаты откуда будем стрелять
-            GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.identity);//Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
+            //GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.identity);//Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
+            
+            GameObject pula = PhotonNetwork.Instantiate("bullet", spawnPoint, Quaternion.identity);
             Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
 
 
-            pula.transform.right = logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
+            pula.transform.right = !logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
             //speedBullet = logicVelocity ? speedBullet : -speedBullet;
 
             rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
