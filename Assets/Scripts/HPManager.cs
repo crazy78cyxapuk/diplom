@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
+using System.IO;
 
 public class HPManager : MonoBehaviourPunCallbacks
 {
@@ -21,8 +22,6 @@ public class HPManager : MonoBehaviourPunCallbacks
         pv = GetComponent<PhotonView>();
 
         InitHPObjects();
-
-        StartCoroutine(Deleted());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -35,7 +34,7 @@ public class HPManager : MonoBehaviourPunCallbacks
 
             if (hpBotTank < 1)
             {
-                PhotonNetwork.LoadLevel("Menu");
+                LeaveRoom();
             }
         }
     }
@@ -58,16 +57,6 @@ public class HPManager : MonoBehaviourPunCallbacks
         hpStatus = obj.transform.GetChild(1).GetComponent<Image>();
     }
 
-    IEnumerator Deleted()
-    {
-        if (pv.IsMine)
-        {
-            StartCoroutine(TakeAwayHP(15));
-            yield return new WaitForSeconds(3);
-            StartCoroutine(Deleted());
-        }
-    }
-
     IEnumerator TakeAwayHP(int t) //отнимаем здоровье
     {
         if (pv.IsMine)
@@ -76,5 +65,15 @@ public class HPManager : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(1);
             hpRepeat.fillAmount = hpStatus.fillAmount;
         }
+    }
+
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.LoadLevel("Menu");
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
     }
 }

@@ -8,11 +8,13 @@ public class Bullet : MonoBehaviour
 {
     private float timer = 0;
     private Rigidbody2D rb;
+    private bool destr;
 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        destr = false;
     }
 
     void Update()
@@ -34,16 +36,20 @@ public class Bullet : MonoBehaviour
         {
             Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
             PhotonNetwork.Instantiate("BoomPS", pos, Quaternion.identity);
-            
+
             PhotonNetwork.Destroy(gameObject);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Planet")// || collision.gameObject.tag == "Player") ;
+        if (collision.gameObject.tag == "Planet")
         {
-            DestroyBullet();
+            if (destr == false)
+            {
+                destr = true;
+                DestroyBullet();
+            }
         }
     }
 
@@ -51,7 +57,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
-            DestroyBullet();
+            if (destr == false)
+            {
+                destr = true;
+                DestroyBullet();
+            }
         }
     }
 }

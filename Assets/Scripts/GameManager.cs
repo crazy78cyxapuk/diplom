@@ -26,18 +26,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            positionForPlayers.transform.position = new Vector3(12, 3, -4.5f);
+            positionForPlayers.transform.position = new Vector3(12.69f, 3, -4.5f);
             GameObject newPlayer = PhotonNetwork.Instantiate("newTank", positionForPlayers.transform.position, Quaternion.identity);
             newPlayer.tag = "NoMaster";
         }
 
-        //GameObject newPlayer = PhotonNetwork.Instantiate("newTank", pos, Quaternion.identity);
-        //newPlayer.tag = GetComponent<PhotonView>().ViewID.ToString();
-        //positionForPlayers.transform.position = new Vector3(12, 3, -4.5f);
-
         Instantiate(UI_elements);
-
-        //fire.onClick.AddListener(() => newPlayer.GetComponent<PlayerController>().CreateBullet());
     }
 
     private void Update()

@@ -20,7 +20,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        //base.OnConnectedToMaster();
         Debug.Log("connect");
 
         for(int i=0; i<btn.Length; i++)

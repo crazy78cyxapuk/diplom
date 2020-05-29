@@ -23,8 +23,7 @@ public class PlayerController : MonoBehaviour
     public float recharge; //таймер для перезарядки
 
 
-    bool strengthOver = true;
-    bool rotatPlayer = false;
+    private bool strengthOver = true;
 
     //дуло танка
     [SerializeField] private GameObject barrel;
@@ -63,7 +62,6 @@ public class PlayerController : MonoBehaviour
 
         GameObject obj = GameObject.FindGameObjectWithTag("FireBtn");
         fireBtn = obj.GetComponent<Button>();
-        Debug.Log(fireBtn.name + "!!!!!!!!!!!");
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -158,7 +156,6 @@ public class PlayerController : MonoBehaviour
             Vector3 spawnPoint;
             int speedBullet = 500 + (int)speedStrength;
             spawnPoint = startStvolRight.transform.position; //получаем координаты откуда будем стрелять
-            //GameObject pula = Instantiate(bullet, spawnPoint, Quaternion.identity);//Quaternion.Euler(0, 0, 50+startStvolRight.transform.rotation.z));  //Quaternion.Euler(0f, 0f, -90f)); //create bullet      quaternionStvol);// *
             
             GameObject pula = PhotonNetwork.Instantiate("bullet", spawnPoint, Quaternion.identity);
             Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
