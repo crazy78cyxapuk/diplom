@@ -619,7 +619,7 @@ GameObject:
   - component: {fileID: 349157492993798146}
   - component: {fileID: 758812424974389140}
   m_Layer: 5
-  m_Name: hpBar (1)
+  m_Name: HPMaster
   m_TagString: MasterHP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -639,7 +639,7 @@ RectTransform:
   - {fileID: 8738548815633406346}
   - {fileID: 2987387301815033176}
   m_Father: {fileID: 3150846606856356569}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -718,8 +718,8 @@ RectTransform:
   - {fileID: 8707449048629240220}
   - {fileID: 2162097635592010989}
   - {fileID: 6684059054814351014}
-  - {fileID: 2946479169963757173}
   - {fileID: 8770892242902553295}
+  - {fileID: 2946479169963757173}
   m_Father: {fileID: 4388042990598745086}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1228,7 +1228,7 @@ GameObject:
   - component: {fileID: 5777847573363432107}
   - component: {fileID: 2578650279380891758}
   m_Layer: 5
-  m_Name: hpBar
+  m_Name: HPNoMaster
   m_TagString: NoMasterHP
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1248,7 +1248,7 @@ RectTransform:
   - {fileID: 9139236328776920184}
   - {fileID: 8501741469626427221}
   m_Father: {fileID: 3150846606856356569}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}

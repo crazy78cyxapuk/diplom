@@ -6,12 +6,13 @@ using UnityEngine.UI;
 using Photon.Pun;
 using System.IO;
 
-public class HPManager : MonoBehaviourPunCallbacks
+public class HPManager : MonoBehaviourPun, IPunObservable//MonoBehaviourPunCallbacks,
 {
     private int hpBotTank;
     private const float HP_TANK = 250;
 
-    private Image hpRepeat, hpStatus;
+    //private Image hpRepeat, hpStatus;
+    private Image MasterHPRepeat, MasterHPStatus, NoMasterHPRepeat, NoMasterHPStatus;
 
     private PhotonView pv;
 
@@ -24,56 +25,74 @@ public class HPManager : MonoBehaviourPunCallbacks
         InitHPObjects();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void InitHPObjects()
     {
-        if (collision.gameObject.tag == "Bullet")
+        GameObject obj;
+
+        obj = GameObject.FindGameObjectWithTag("MasterHP");
+        MasterHPRepeat = obj.transform.GetChild(0).GetComponent<Image>();
+        MasterHPStatus = obj.transform.GetChild(1).GetComponent<Image>();
+
+        obj = GameObject.FindGameObjectWithTag("NoMasterHP");
+        NoMasterHPRepeat = obj.transform.GetChild(0).GetComponent<Image>();
+        NoMasterHPStatus = obj.transform.GetChild(1).GetComponent<Image>();
+    }
+
+    IEnumerator TakeAwayHP(Image hpStatus, Image hpRepeat) //отнимаем здоровье
+    {
+        if (pv.IsMine)
         {
             int minusHP = Random.Range(0, 6) + 20;
             hpBotTank -= minusHP;
-            StartCoroutine(TakeAwayHP(minusHP));
 
             if (hpBotTank < 1)
             {
                 LeaveRoom();
             }
+            else
+            {
+                hpStatus.fillAmount -= minusHP / HP_TANK;
+                yield return new WaitForSeconds(1);
+                hpRepeat.fillAmount = hpStatus.fillAmount;
+            }
         }
     }
 
-    private void InitHPObjects()
+    public void MasterTakeAwayHP()
     {
-        GameObject obj;
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            obj = GameObject.FindGameObjectWithTag("MasterHP");
-
-        }
-        else
-        {
-            obj = GameObject.FindGameObjectWithTag("NoMasterHP");
-        }
-
-        hpRepeat = obj.transform.GetChild(0).GetComponent<Image>();
-        hpStatus = obj.transform.GetChild(1).GetComponent<Image>();
+        StartCoroutine(TakeAwayHP(MasterHPStatus, MasterHPRepeat));
     }
 
-    IEnumerator TakeAwayHP(int t) //отнимаем здоровье
+    public void NoMasterTakeAwayHP()
     {
-        if (pv.IsMine)
-        {
-            hpStatus.fillAmount -= t / HP_TANK;
-            yield return new WaitForSeconds(1);
-            hpRepeat.fillAmount = hpStatus.fillAmount;
-        }
+        StartCoroutine(TakeAwayHP(NoMasterHPStatus, NoMasterHPRepeat));
     }
 
-    public override void OnLeftRoom()
-    {
-        PhotonNetwork.LoadLevel("Menu");
-    }
+    //public override void OnLeftRoom()
+    //{
+    //    PhotonNetwork.LoadLevel("Menu");
+    //}
 
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(NoMasterHPRepeat.fillAmount);
+            stream.SendNext(NoMasterHPStatus.fillAmount);
+            stream.SendNext(MasterHPRepeat.fillAmount);
+            stream.SendNext(MasterHPStatus.fillAmount);
+        }
+        else
+        {
+            NoMasterHPRepeat.fillAmount = (float)stream.ReceiveNext();
+            NoMasterHPStatus.fillAmount = (float)stream.ReceiveNext();
+            MasterHPRepeat.fillAmount = (float)stream.ReceiveNext();
+            MasterHPStatus.fillAmount = (float)stream.ReceiveNext();
+        }
     }
 }

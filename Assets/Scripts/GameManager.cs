@@ -15,9 +15,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        NewGame();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LeaveRoom();
+        }
+    }
+
+    private void NewGame()
+    {
         positionForPlayers = GameObject.FindGameObjectWithTag("Respawn");
-        
-        //Vector3 pos = positionForPlayers.transform.position;
+        Vector3 startPosition = positionForPlayers.transform.position;
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -32,14 +44,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         Instantiate(UI_elements);
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            LeaveRoom();
-        }
+        positionForPlayers.transform.position = startPosition;
     }
 
     public override void OnLeftRoom()

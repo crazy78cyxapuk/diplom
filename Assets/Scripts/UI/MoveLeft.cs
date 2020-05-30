@@ -22,15 +22,11 @@ public class MoveLeft : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		Debug.Log("MoveLeft Enter");
-
 		obj.GetComponent<PlayerController>().MoveLeft();
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		Debug.Log("MoveLeft Exit");
-
 		obj.GetComponent<PlayerController>().StopMove();
 	}
 }
