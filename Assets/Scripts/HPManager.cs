@@ -68,11 +68,6 @@ public class HPManager : MonoBehaviourPun, IPunObservable//MonoBehaviourPunCallb
         StartCoroutine(TakeAwayHP(NoMasterHPStatus, NoMasterHPRepeat));
     }
 
-    //public override void OnLeftRoom()
-    //{
-    //    PhotonNetwork.LoadLevel("Menu");
-    //}
-
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();

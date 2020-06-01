@@ -98,7 +98,8 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Space))
             {
-                ControlSpeedBullet();
+                CreateBullet();
+                //ControlSpeedBullet();
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {

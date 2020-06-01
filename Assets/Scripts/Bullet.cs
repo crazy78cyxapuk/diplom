@@ -29,6 +29,7 @@ public class Bullet : MonoBehaviour
         transform.up = rb.velocity;
     }
 
+    [PunRPC]
     private void DestroyBullet()
     {
         PhotonView pv = gameObject.GetComponent<PhotonView>();
@@ -45,7 +46,24 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Planet" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
-            DestroyBullet();
+            if (collision.gameObject.tag == "NoMaster")
+            {
+                GameObject obj = GameObject.FindGameObjectWithTag("NoMaster");
+                obj.GetComponent<HPManager>().NoMasterTakeAwayHP();
+                Debug.Log("Bullet NoMaster");
+            }
+
+            if (collision.gameObject.tag == "Master")
+            {
+                GameObject obj = GameObject.FindGameObjectWithTag("Master");
+                obj.GetComponent<HPManager>().MasterTakeAwayHP();
+                Debug.Log("Bullet Master");
+            }
+
+            PhotonView pv = gameObject.GetComponent<PhotonView>();
+
+            pv.RPC("DestroyBullet", RpcTarget.All);
+            //DestroyBullet();
         }
     }
 
