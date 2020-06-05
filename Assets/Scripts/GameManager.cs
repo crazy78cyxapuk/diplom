@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         NewGame();
+        //AgreeGame();
     }
 
     private void Update()
@@ -26,21 +27,33 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private void AgreeGame()
+    {
+        if (PhotonNetwork.CountOfPlayers == 2)
+        {
+            NewGame();
+        }
+    }
+
     private void NewGame()
     {
         positionForPlayers = GameObject.FindGameObjectWithTag("Respawn");
         Vector3 startPosition = positionForPlayers.transform.position;
 
+        GameObject newPlayer;
+
         if (PhotonNetwork.IsMasterClient)
         {
-            GameObject newPlayer = PhotonNetwork.Instantiate("newTank", positionForPlayers.transform.position, Quaternion.identity);
+            newPlayer = PhotonNetwork.Instantiate("Tank", positionForPlayers.transform.position, Quaternion.identity);
             newPlayer.tag = "Master";
+            PhotonNetwork.Instantiate("UI_HP_Master", gameObject.transform.position, Quaternion.identity);
         }
         else
         {
             positionForPlayers.transform.position = new Vector3(12.69f, 3, -4.5f);
-            GameObject newPlayer = PhotonNetwork.Instantiate("newTank", positionForPlayers.transform.position, Quaternion.identity);
+            newPlayer = PhotonNetwork.Instantiate("Tank", positionForPlayers.transform.position, Quaternion.identity);
             newPlayer.tag = "NoMaster";
+            PhotonNetwork.Instantiate("UI_HP_NoMaster", gameObject.transform.position, Quaternion.identity);
         }
 
         Instantiate(UI_elements);

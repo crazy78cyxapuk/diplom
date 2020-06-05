@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviourPunCallbacks
 {
     private float timer = 0;
     private Rigidbody2D rb;
@@ -46,50 +46,8 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "Planet" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
-            if (collision.gameObject.tag == "NoMaster")
-            {
-                GameObject obj = GameObject.FindGameObjectWithTag("NoMaster");
-                obj.GetComponent<HPManager>().NoMasterTakeAwayHP();
-                Debug.Log("Bullet NoMaster");
-            }
-
-            if (collision.gameObject.tag == "Master")
-            {
-                GameObject obj = GameObject.FindGameObjectWithTag("Master");
-                obj.GetComponent<HPManager>().MasterTakeAwayHP();
-                Debug.Log("Bullet Master");
-            }
-
             PhotonView pv = gameObject.GetComponent<PhotonView>();
-
             pv.RPC("DestroyBullet", RpcTarget.All);
-            //DestroyBullet();
         }
     }
-
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-    //    if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
-    //    {
-    //        destr = true;
-
-    //        if (collision.gameObject.tag == "NoMaster")
-    //        {
-    //            GameObject obj = GameObject.FindGameObjectWithTag("NoMaster");
-    //            obj.GetComponent<HPManager>().NoMasterTakeAwayHP();
-    //            Debug.Log("Bullet NoMaster");
-    //        }
-
-    //        if (collision.gameObject.tag == "Master")
-    //        {
-    //            GameObject obj = GameObject.FindGameObjectWithTag("Master");
-    //            obj.GetComponent<HPManager>().MasterTakeAwayHP();
-    //            Debug.Log("Bullet Master");
-    //        }
-
-    //        DestroyBullet();
-    //    }
-
-       
-    //}
 }

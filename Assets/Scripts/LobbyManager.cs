@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    //[SerializeField] Button[] btn;
     [SerializeField] private GameObject btnRoom;
     [SerializeField] private GameObject content;
 
@@ -26,7 +25,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            //Change the Text
             logTxt.text = "Проверьте подключение к интернету и перезайдите";
         }
         else
@@ -92,8 +90,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
             newRoomBtn.GetComponent<Button>().onClick.AddListener(delegate { JoinRoom(newRoomBtn.transform); });
         }
-
-        //base.OnRoomListUpdate(roomList);
     }
 
     public void JoinRoom(Transform btn)
@@ -132,6 +128,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             logCreateTxt.text = "Недопустимое имя для комнаты!";
         }
+    }
+
+    public void CreateRandomRoom()
+    {
+        string rand = Random.Range(1000, 9999).ToString();
+
+        CreateRoom(rand);
     }
 
     public void ShowCreateSettingRoom()

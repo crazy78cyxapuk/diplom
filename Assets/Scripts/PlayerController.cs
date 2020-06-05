@@ -81,7 +81,6 @@ public class PlayerController : MonoBehaviour
         if (photonView.IsMine)
         {
 
-#if UNITY_EDITOR
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 MoveLeft();
@@ -99,13 +98,20 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKey(KeyCode.Space))
             {
                 CreateBullet();
-                //ControlSpeedBullet();
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 Fire();
             }
-#endif
+
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                MoveBarrelUp();
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                MoveBarrelDown();
+            }
 
 
             if (goMove)

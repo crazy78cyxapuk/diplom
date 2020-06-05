@@ -38,6 +38,11 @@ MonoBehaviour:
   - RespawnSpaceship
   - TakeAwayHP
   - DestroyBullet
+  - MasterTakeAwayHP
+  - NoMasterTakeAwayHP
+  - Damage
+  - ShowBar
+  - ShowTakeAway
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
