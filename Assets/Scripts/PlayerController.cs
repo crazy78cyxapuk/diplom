@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     private float speed;
     private bool goMove;
     private bool flipRight;
-    //[SerializeField] private GameObject bullet;
     [SerializeField] private GameObject startStvolRight;
     private bool logicVelocity;
 
@@ -40,6 +39,10 @@ public class PlayerController : MonoBehaviour
 
     //Photon
     private PhotonView photonView;
+
+    //Music
+    private AudioSource music;
+    [SerializeField] private AudioClip engine;
 
 
     private void Start()
@@ -73,6 +76,8 @@ public class PlayerController : MonoBehaviour
             GameObject around = GameObject.Find("bluePlanet");
             aroundObj = around.transform;
         }
+
+        InitMusic();
     }
 
 
@@ -169,7 +174,6 @@ public class PlayerController : MonoBehaviour
 
 
             pula.transform.right = !logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
-            //speedBullet = logicVelocity ? speedBullet : -speedBullet;
 
             rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
 
@@ -299,5 +303,12 @@ public class PlayerController : MonoBehaviour
             x += 180;
         
         return x;
+    }
+
+    private void InitMusic()
+    {
+        music = gameObject.GetComponent<AudioSource>();
+        music.clip = engine;
+        music.Play();
     }
 }
