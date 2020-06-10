@@ -12,6 +12,10 @@ TagManager:
   - MasterHP
   - NoMasterHP
   - GameManager
+  - UI_HP_Master
+  - UI_HP_NoMaster
+  - ReadyPlayers
+  - ReadyPlayerButton
   layers:
   - Default
   - TransparentFX

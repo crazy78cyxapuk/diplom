@@ -30,8 +30,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 2252333519225528474}
-  - {fileID: 6476061275082985658}
+  - {fileID: 604709236314788858}
+  - {fileID: 3367047334147583076}
   m_Father: {fileID: 4388042990598745086}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 3249979420423634871}
   m_Layer: 0
   m_Name: UI_HP_NoMaster
-  m_TagString: Untagged
+  m_TagString: UI_HP_NoMaster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -278,7 +278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 168f53ea4bee29c45b6af45dcdc9aa9a, type: 3}
---- !u!224 &2252333519225528474 stripped
+--- !u!224 &604709236314788858 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1667948967642821614, guid: 168f53ea4bee29c45b6af45dcdc9aa9a,
     type: 3}
@@ -406,7 +406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9a492d068707c8488a0cb6a51c9892d, type: 3}
---- !u!224 &6476061275082985658 stripped
+--- !u!224 &3367047334147583076 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8603477126415842426, guid: f9a492d068707c8488a0cb6a51c9892d,
     type: 3}

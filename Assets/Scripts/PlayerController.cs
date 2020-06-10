@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     //Music
     private AudioSource music;
     [SerializeField] private AudioClip engine;
+    private bool _playMusic;
 
 
     private void Start()
@@ -116,6 +117,10 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 MoveBarrelDown();
+            }
+            if(Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                MoveBarrelStop();
             }
 
 
@@ -228,6 +233,8 @@ public class PlayerController : MonoBehaviour
     public void StopMove()
     {
         goMove = false;
+        music.volume = 0.2f;
+        _playMusic = true;
     }
 
     public void MoveRight()
@@ -244,6 +251,12 @@ public class PlayerController : MonoBehaviour
         }
 
         speed = rotSpeed;
+
+        if (_playMusic == true)
+        {
+            music.volume = 0.8f;
+            _playMusic = false;
+        }
     }
 
     public void MoveLeft()
@@ -260,6 +273,12 @@ public class PlayerController : MonoBehaviour
         }
 
         speed = -rotSpeed;
+
+        if (_playMusic == true)
+        {
+            music.volume = 0.8f;
+            _playMusic = false;
+        }
     }
     
     public void MoveBarrelUp()
@@ -309,6 +328,7 @@ public class PlayerController : MonoBehaviour
     {
         music = gameObject.GetComponent<AudioSource>();
         music.clip = engine;
+        music.volume = 0.2f;
         music.Play();
     }
 }

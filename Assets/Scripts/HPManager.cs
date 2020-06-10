@@ -9,13 +9,13 @@ using System.IO;
 public class HPManager : MonoBehaviourPunCallbacks
 {
     private int hpBotTank;
-    private const float HP_TANK = 250;
+    private const float HP_TANK = 250;//250;
 
     private PhotonView pv;
 
     private void Start()
     {
-        hpBotTank = 250;
+        hpBotTank = 250; //250;
 
         pv = GetComponent<PhotonView>();
     }
@@ -30,10 +30,11 @@ public class HPManager : MonoBehaviourPunCallbacks
 
             if (hpBotTank < 1)
             {
-                LeaveRoom();
+                DestroyTankAndShowScreenReload();
             }
 
             GameObject obj;
+
             if (PhotonNetwork.IsMasterClient)
             {
                 obj = GameObject.FindGameObjectWithTag("MasterHP");
@@ -49,6 +50,12 @@ public class HPManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private void DestroyTankAndShowScreenReload()
+    {
+        GameObject obj = GameObject.FindGameObjectWithTag("GameManager");
+        obj.GetComponent<GameManager>().GameOver();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Bullet")
@@ -62,10 +69,5 @@ public class HPManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-    }
-
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
     }
 }
