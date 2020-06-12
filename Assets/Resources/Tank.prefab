@@ -331,7 +331,6 @@ MonoBehaviour:
   rotSpeed: 0.8
   startStvolRight: {fileID: 314519901621568420}
   strengthBulletProgressBar: {fileID: 6708068913686870418}
-  recharge: 0
   barrel: {fileID: 822032236171662096}
   aroundBarrel: {fileID: 2794391658978070997}
   engine: {fileID: 8300000, guid: 1a39652b55ef6dc4c894ece2783c58c7, type: 3}

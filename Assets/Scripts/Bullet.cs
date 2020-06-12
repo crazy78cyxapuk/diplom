@@ -8,11 +8,13 @@ public class Bullet : MonoBehaviourPunCallbacks
 {
     private float timer = 0;
     private Rigidbody2D rb;
+    private PhotonView pv;
 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        pv = gameObject.GetComponent<PhotonView>();
     }
 
     void Update()
@@ -21,7 +23,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
         if (timer > 5)
         {
-            DestroyBullet();
+            pv.RPC("DestroyBullet", RpcTarget.All);
         }
 
         transform.up = rb.velocity;
@@ -30,7 +32,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     [PunRPC]
     private void DestroyBullet()
     {
-        PhotonView pv = gameObject.GetComponent<PhotonView>();
         if (pv.IsMine)
         {
             Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
@@ -44,10 +45,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         if (collision.gameObject.tag == "Planet" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
-            //PhotonView pv = gameObject.GetComponent<PhotonView>();
-            //pv.RPC("DestroyBullet", RpcTarget.All);
-
-            DestroyBullet();
+            pv.RPC("DestroyBullet", RpcTarget.All);
         }
     }
 }

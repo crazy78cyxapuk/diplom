@@ -19,8 +19,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject strengthBulletProgressBar;
     private Color color;
 
-    public float recharge; //таймер для перезарядки
-
 
     private bool strengthOver = true;
 
@@ -59,8 +57,6 @@ public class PlayerController : MonoBehaviour
         moveBarrel = false;
 
         speedStrength = 0;
-
-        recharge = 3f;
 
         color = strengthBulletProgressBar.GetComponent<SpriteRenderer>().color;
 
@@ -184,8 +180,6 @@ public class PlayerController : MonoBehaviour
 
             speedStrength = 0;
             createBullet = false;
-
-            recharge = 0;
 
             strengthBulletProgressBar.SetActive(false);
             strengthBulletProgressBar.GetComponent<SpriteRenderer>().color = color;
