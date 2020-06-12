@@ -45,6 +45,8 @@ MonoBehaviour:
   - ShowTakeAway
   - AddReadyPlayer
   - PlusPlayerReady
+  - Play
+  - GameOver
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

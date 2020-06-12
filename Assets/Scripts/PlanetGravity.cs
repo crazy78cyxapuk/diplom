@@ -10,7 +10,7 @@ public class PlanetGravity : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.centerOfMass = new Vector3(0, 0, 30);
+        //rb.centerOfMass = new Vector3(0, 0, 30);
     }
 
     private void FixedUpdate()

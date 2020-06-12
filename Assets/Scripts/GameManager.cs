@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     public void Play()
     {
         ClearField();
