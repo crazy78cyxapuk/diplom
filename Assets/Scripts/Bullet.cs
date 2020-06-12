@@ -44,8 +44,10 @@ public class Bullet : MonoBehaviourPunCallbacks
     {
         if (collision.gameObject.tag == "Planet" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
-            PhotonView pv = gameObject.GetComponent<PhotonView>();
-            pv.RPC("DestroyBullet", RpcTarget.All);
+            //PhotonView pv = gameObject.GetComponent<PhotonView>();
+            //pv.RPC("DestroyBullet", RpcTarget.All);
+
+            DestroyBullet();
         }
     }
 }

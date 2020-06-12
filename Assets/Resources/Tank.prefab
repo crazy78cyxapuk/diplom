@@ -334,7 +334,6 @@ MonoBehaviour:
   recharge: 0
   barrel: {fileID: 822032236171662096}
   aroundBarrel: {fileID: 2794391658978070997}
-  fireBtn: {fileID: 0}
   engine: {fileID: 8300000, guid: 1a39652b55ef6dc4c894ece2783c58c7, type: 3}
 --- !u!114 &8096283022383328736
 MonoBehaviour:

@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             newPlayer = PhotonNetwork.Instantiate("Tank", positionForPlayers.transform.position, Quaternion.identity);
-            //clone_UI_elements = Instantiate(UI_elements);
             newPlayer.tag = "Master";
             PhotonNetwork.Instantiate("UI_HP_Master", gameObject.transform.position, Quaternion.identity);
         }
@@ -99,7 +98,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             positionForPlayers.transform.position = new Vector3(12.69f, 3, -4.5f);
             newPlayer = PhotonNetwork.Instantiate("Tank", positionForPlayers.transform.position, Quaternion.identity);
-            //clone_UI_elements = Instantiate(UI_elements);
             newPlayer.tag = "NoMaster";
             PhotonNetwork.Instantiate("UI_HP_NoMaster", gameObject.transform.position, Quaternion.identity);
         }
