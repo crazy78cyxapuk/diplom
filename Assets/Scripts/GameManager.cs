@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject UI_elements;
     private GameObject clone_UI_elements;
 
+    private PhotonView pv;
+
     private GameObject UI_AgreeGame;
 
     private void Start()
@@ -23,6 +25,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             PhotonNetwork.Instantiate("readyPlayers", gameObject.transform.position, Quaternion.identity);
             UI_AgreeGame = PhotonNetwork.Instantiate("ReloadGameUI", gameObject.transform.position, Quaternion.identity);
         }
+
+        pv = gameObject.GetComponent<PhotonView>();
     }
 
     private void Update()
@@ -36,12 +40,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void Play()
     {
-        ClearField();
+        //ClearField();
+        pv.RPC("ClearField", RpcTarget.All);
+
         NewGame();
     }
 
+    [PunRPC]
     private void ClearField()
     {
+
         if (PhotonNetwork.IsMasterClient)
         {
             GameObject obj = GameObject.FindGameObjectWithTag("Master");
@@ -49,17 +57,17 @@ public class GameManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.Destroy(obj);
 
             obj = GameObject.FindGameObjectWithTag("UI_HP_Master");
-            if (obj != null) 
+            if (obj != null)
                 PhotonNetwork.Destroy(obj);
         }
         else
         {
             GameObject obj = GameObject.FindGameObjectWithTag("NoMaster");
-            if (obj != null) 
+            if (obj != null)
                 PhotonNetwork.Destroy(obj);
 
             obj = GameObject.FindGameObjectWithTag("UI_HP_NoMaster");
-            if (obj != null) 
+            if (obj != null)
                 PhotonNetwork.Destroy(obj);
         }
 
@@ -67,6 +75,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Destroy(clone_UI_elements);
     }
 
+    [PunRPC]
     public void GameOver()
     {
         ClearField();
@@ -103,8 +112,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             PhotonNetwork.Instantiate("UI_HP_NoMaster", gameObject.transform.position, Quaternion.identity);
         }
 
-        
-
         positionForPlayers.transform.position = startPosition;
     }
 
@@ -130,6 +137,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         //когда игрок покидает комнату
         Debug.Log(otherPlayer.NickName + "    left room");
 
-        GameOver();
+        pv.RPC("GameOver", RpcTarget.All);
     }
 }

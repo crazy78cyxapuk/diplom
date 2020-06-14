@@ -10,22 +10,20 @@ public class StartGame : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Start()
     {
-        playersReady = 0;        
+        playersReady = 0;
     }
 
     private void Update()
     {
-        if (playersReady == 1)
+        if (playersReady == 2)
         {
-            //GameObject obj = GameObject.FindGameObjectWithTag("ReadyPlayerButton");
-            //obj.GetComponent<Button>().interactable = true;
-
             GameObject obj = GameObject.FindGameObjectWithTag("GameManager");
 
             PhotonView pv = obj.GetComponent<PhotonView>();
             pv.RPC("Play", RpcTarget.All);
 
-            if (PhotonNetwork.IsMasterClient)
+            pv = gameObject.GetComponent<PhotonView>();
+            if (pv.IsMine)
                 PhotonNetwork.Destroy(gameObject);
         }
     }

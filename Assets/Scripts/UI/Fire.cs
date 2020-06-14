@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-//using UnityEngine.UIElements;
 using Photon.Pun;
 using UnityEngine.UI;
 
@@ -12,9 +11,12 @@ public class Fire : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	private AudioSource music;
 
+	private Button btn;
+
 	private void Start()
 	{
 		music = gameObject.GetComponent<AudioSource>();
+		btn = gameObject.GetComponent<Button>();
 
 		if (PhotonNetwork.IsMasterClient)
 		{
@@ -28,8 +30,6 @@ public class Fire : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 	IEnumerator Recharge()
 	{
-		Button btn = gameObject.GetComponent<Button>();
-
 		btn.interactable = false;
 		yield return new WaitForSeconds(3);
 		btn.interactable = true;
@@ -39,14 +39,18 @@ public class Fire : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
-	{		
-		obj.GetComponent<PlayerController>().CreateBullet();
+	{
+		if (btn.interactable == true)
+			obj.GetComponent<PlayerController>().CreateBullet();
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		obj.GetComponent<PlayerController>().Fire();
+		if (btn.interactable == true)
+		{
+			obj.GetComponent<PlayerController>().Fire();
 
-		StartCoroutine(Recharge());
+			StartCoroutine(Recharge());
+		}
 	}
 }

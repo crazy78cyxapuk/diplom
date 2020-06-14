@@ -100,7 +100,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("Game"); //сцена с игрой
+        PhotonNetwork.LoadLevel("Game");
     }
     #endregion
 

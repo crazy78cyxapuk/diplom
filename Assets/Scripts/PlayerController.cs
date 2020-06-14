@@ -32,9 +32,6 @@ public class PlayerController : MonoBehaviour
     private float speedStrength;
     private bool createBullet;
 
-    //UI
-    //[SerializeField] private Button fireBtn;
-
     //Photon
     private PhotonView photonView;
 
@@ -60,9 +57,6 @@ public class PlayerController : MonoBehaviour
 
         color = strengthBulletProgressBar.GetComponent<SpriteRenderer>().color;
 
-        //////////////////////GameObject obj = GameObject.FindGameObjectWithTag("FireBtn");
-        //////////////////////fireBtn = obj.GetComponent<Button>();
-
         if (PhotonNetwork.IsMasterClient)
         {
             GameObject around = GameObject.Find("orangePlanet");
@@ -82,7 +76,7 @@ public class PlayerController : MonoBehaviour
     {
         if (photonView.IsMine)
         {
-
+#if UNITY_EDITOR
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 MoveLeft();
@@ -118,6 +112,7 @@ public class PlayerController : MonoBehaviour
             {
                 MoveBarrelStop();
             }
+#endif
 
 
             if (goMove)
@@ -137,67 +132,32 @@ public class PlayerController : MonoBehaviour
             {
                 ControlSpeedBullet();
             }
-
-            //if (recharge <= 3f)
-            //{
-            //    recharge += Time.deltaTime;
-            //    if (fireBtn.IsInteractable() == true)
-            //    {
-            //        fireBtn.interactable = false;
-            //    }
-            //}
-            //else
-            //{
-            //    if (fireBtn.IsInteractable() == false)
-            //    {
-            //        fireBtn.interactable = true;
-            //    }
-            //}
         }
     }
 
-    //private void FixedUpdate()
-    //{
-    //    Quaternion rotation = Quaternion.FromToRotation(-transform.up, aroundObj.position - transform.position);
-    //    transform.rotation = rotation * transform.rotation;
-    //}
-
     public void Fire()
     {
-        //if (recharge >= 3f)
-        //{
-            Vector3 spawnPoint;
-            int speedBullet = 500 + (int)speedStrength;
-            spawnPoint = startStvolRight.transform.position; //получаем координаты откуда будем стрелять
-            
-            GameObject pula = PhotonNetwork.Instantiate("bullet", spawnPoint, Quaternion.identity);
-            Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
+        Vector3 spawnPoint;
+        int speedBullet = 500 + (int)speedStrength;
+        spawnPoint = startStvolRight.transform.position;
+
+        GameObject pula = PhotonNetwork.Instantiate("bullet", spawnPoint, Quaternion.identity);
+        Rigidbody2D rbPula = pula.GetComponent<Rigidbody2D>();
 
 
-            pula.transform.right = !logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
+        pula.transform.right = !logicVelocity ? -startStvolRight.transform.right : startStvolRight.transform.right;
 
-            rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse); //задаем ускорение пули
+        rbPula.AddForce(pula.transform.right * speedBullet, ForceMode2D.Impulse);
 
-            speedStrength = 0;
-            createBullet = false;
+        speedStrength = 0;
+        createBullet = false;
 
-            strengthBulletProgressBar.SetActive(false);
-            strengthBulletProgressBar.GetComponent<SpriteRenderer>().color = color;
-
-        ///////////////////////////StartCoroutine(Recharge());
-        //}
+        strengthBulletProgressBar.SetActive(false);
+        strengthBulletProgressBar.GetComponent<SpriteRenderer>().color = color;
     }
-
-    //////////////////////////IEnumerator Recharge()
-    //////////////////////////{
-    //////////////////////////    fireBtn.interactable = false;
-    //////////////////////////    yield return new WaitForSeconds(3);
-    //////////////////////////    fireBtn.interactable = true;
-    //////////////////////////}
 
     public void ControlSpeedBullet()
     {
-
         if (strengthOver)
         {
             if (speedStrength < 300)
@@ -226,12 +186,8 @@ public class PlayerController : MonoBehaviour
 
     public void CreateBullet()
     {
-        //if (recharge >= 3f)
-        //if (fireBtn.interactable == true)
-        //{
-            strengthBulletProgressBar.SetActive(true);
-            createBullet = true;
-        //}
+        strengthBulletProgressBar.SetActive(true);
+        createBullet = true;
     }
 
     public void StopMove()
