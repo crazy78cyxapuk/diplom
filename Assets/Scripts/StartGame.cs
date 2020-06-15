@@ -15,12 +15,15 @@ public class StartGame : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (playersReady == 2)
+        if (playersReady == 1)
         {
             GameObject obj = GameObject.FindGameObjectWithTag("GameManager");
+            //obj.GetComponent<GameManager>().Play();
 
             PhotonView pv = obj.GetComponent<PhotonView>();
             pv.RPC("Play", RpcTarget.All);
+
+
 
             pv = gameObject.GetComponent<PhotonView>();
             if (pv.IsMine)

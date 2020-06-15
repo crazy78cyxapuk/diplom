@@ -9,13 +9,12 @@ using System.IO;
 public class HPManager : MonoBehaviourPunCallbacks
 {
     private int hpBotTank;
-    private const float HP_TANK = 250;
 
     private PhotonView pv;
 
     private void Start()
     {
-        hpBotTank = 250;
+        hpBotTank = 80;
 
         pv = GetComponent<PhotonView>();
     }
@@ -53,12 +52,13 @@ public class HPManager : MonoBehaviourPunCallbacks
     private void DestroyTankAndShowScreenReload()
     {
         GameObject obj = GameObject.FindGameObjectWithTag("GameManager");
-        //obj.GetComponent<GameManager>().GameOver();
+        obj.GetComponent<GameManager>().GameOver();
         PhotonView pv = obj.GetComponent<PhotonView>();
         pv.RPC("GameOver", RpcTarget.All);
+
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Bullet")
         {

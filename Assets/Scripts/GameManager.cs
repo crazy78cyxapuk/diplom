@@ -40,13 +40,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void Play()
     {
-        //ClearField();
-        pv.RPC("ClearField", RpcTarget.All);
-
+        ClearField();
         NewGame();
     }
 
-    [PunRPC]
     private void ClearField()
     {
 
@@ -75,7 +72,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             Destroy(clone_UI_elements);
     }
 
-    [PunRPC]
     public void GameOver()
     {
         ClearField();
@@ -88,7 +84,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void NewGame()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && UI_AgreeGame != null)
             PhotonNetwork.Destroy(UI_AgreeGame);
 
         positionForPlayers = GameObject.FindGameObjectWithTag("Respawn");
@@ -137,6 +133,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         //когда игрок покидает комнату
         Debug.Log(otherPlayer.NickName + "    left room");
 
-        pv.RPC("GameOver", RpcTarget.All);
+        GameOver();
     }
 }
