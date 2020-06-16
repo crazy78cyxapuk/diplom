@@ -106,6 +106,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     #region other menu settings
 
+    public void Exit()
+    {
+        Application.Quit();
+    }
+
     public void BackToMenu()
     {
         MenuScreen.SetActive(true);

@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Destroy(clone_UI_elements);
     }
 
+    [PunRPC]
     public void GameOver()
     {
         ClearField();

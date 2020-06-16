@@ -8,7 +8,7 @@ public class ShowHP : MonoBehaviourPunCallbacks, IPunObservable
 {
     [SerializeField] private Image HPRepeat, HPStatus;
 
-    private float HP_TANK = 250;
+    private float HP_TANK = 80;
 
     [PunRPC]
     public void ShowBar(int minusHP)

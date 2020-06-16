@@ -60,15 +60,17 @@ public class HPManager : MonoBehaviourPunCallbacks
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
         if (collision.gameObject.tag == "Bullet")
         {
-            if (collision.gameObject.tag == "Bullet")
-            {
-                if (pv.IsMine)
-                {
-                    pv.RPC("Damage", RpcTarget.All);
-                }
-            }
+            
+            pv.RPC("Damage", RpcTarget.All);
+
+            Debug.Log("HPManager!!!!!!");
         }
     }
 }

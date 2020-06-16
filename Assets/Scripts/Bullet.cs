@@ -43,9 +43,18 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Planet" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.tag == "Planet") // || collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
         {
             pv.RPC("DestroyBullet", RpcTarget.All);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "NoMaster" || collision.gameObject.tag == "Master" || collision.gameObject.tag == "Bullet")
+        {
+            pv.RPC("DestroyBullet", RpcTarget.All);
+            Debug.Log("BULLET!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
     }
 }

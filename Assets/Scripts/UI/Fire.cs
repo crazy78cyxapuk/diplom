@@ -31,7 +31,7 @@ public class Fire : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	IEnumerator Recharge()
 	{
 		btn.interactable = false;
-		yield return new WaitForSeconds(3);
+		yield return new WaitForSeconds(1.5f);
 		btn.interactable = true;
 
 		music.Play();
