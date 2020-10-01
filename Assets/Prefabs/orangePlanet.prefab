@@ -61,6 +61,8 @@ GameObject:
   - component: {fileID: 5241738382267309787}
   - component: {fileID: 5241738382267309782}
   - component: {fileID: 5241738382267309786}
+  - component: {fileID: 5132150957128933572}
+  - component: {fileID: 7745568023850683566}
   m_Layer: 0
   m_Name: orangePlanet
   m_TagString: Untagged
@@ -198,3 +200,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ee90af0f973204abb70b0857c05f6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5132150957128933572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5241738382267309777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 7745568023850683566}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7745568023850683566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5241738382267309777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e7cb724808c322458aa4d15f5035fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizeVelocity: 1
+  m_SynchronizeAngularVelocity: 1
+  m_TeleportEnabled: 0
+  m_TeleportIfDistanceGreaterThan: 3
